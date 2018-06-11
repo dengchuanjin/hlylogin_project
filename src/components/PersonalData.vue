@@ -1,23 +1,23 @@
 <template>
   <div>
-    <x-header>个人资料 <a slot="right" @click="update">编辑个人资料</a></x-header>
-    <group style="text-align: left">
+    <x-header style="position: fixed;left: 0; top: 0; z-index: 999; width: 100%;">个人资料 <a slot="right" @click="update">编辑个人资料</a></x-header>
+    <group style="text-align: left; padding:50px 0;">
       <div class="headImage clearfix">
-        <img :src="userInfromationObj.ui_HeadImage" width="70" height="70">
+        <img :src="userInfromationObj.sm_ui_HeadImage" width="70" height="70">
         <strong @click="replaceHeadImage">更换头像&gt;</strong>
       </div>
-      <cell title="昵称" :value="userInfromationObj.ui_Name"></cell>
-      <cell title="身份证号" :value="userInfromationObj.ui_CertNo"></cell>
-      <cell title="手机号" :value="userInfromationObj.ui_Phone"></cell>
-      <cell title="生日" :value="userInfromationObj.ui_Birthday"></cell>
-      <cell title="性别" :value="userInfromationObj.ts_ui_Sex==0?'男':'女'"></cell>
-      <cell title="电子邮箱" :value="userInfromationObj.ts_ui_Email"></cell>
-      <cell title="省" :value="userInfromationObj.proviceName"></cell>
-      <cell title="市" :value="userInfromationObj.cityName"></cell>
-      <cell title="详细地址" :value="userInfromationObj.ui_Address"></cell>
-      <cell title="婚姻状况" :value="userInfromationObj.ui_MarryStatus==0?'未婚':'已婚'"></cell>
-      <cell title="职业" :value="userInfromationObj.ts_ui_JobName"></cell>
-      <cell title="学历" :value="userInfromationObj.ts_ui_EducationName"></cell>
+      <cell title="昵称" :value="userInfromationObj.sm_ui_Name"></cell>
+      <cell title="身份证号" :value="userInfromationObj.sm_ui_CertNo"></cell>
+      <cell title="手机号" :value="userInfromationObj.sm_ui_Phone"></cell>
+      <cell title="生日" :value="userInfromationObj.sm_ui_Birthday"></cell>
+      <cell title="性别" :value="userInfromationObj.sm_ui_SexName"></cell>
+      <cell title="电子邮箱" :value="userInfromationObj.sm_ui_Email"></cell>
+      <cell title="省" :value="userInfromationObj.sm_ui_ProviceName"></cell>
+      <cell title="市" :value="userInfromationObj.sm_ui_CityName"></cell>
+      <cell title="详细地址" :value="userInfromationObj.sm_ui_Address"></cell>
+      <cell title="婚姻状况" :value="userInfromationObj.sm_ui_Marray"></cell>
+      <cell title="职业" :value="userInfromationObj.sm_ui_JobName"></cell>
+      <cell title="学历" :value="userInfromationObj.sm_ui_EducationName"></cell>
     </group>
     <alert
       v-model="showHead"
@@ -29,7 +29,7 @@
       <img :src="headImageUrl" alt="" width="70" height="70">
     </alert>
     <!--加载-->
-    <loading :show="showLoding" text=""></loading>
+    <loading :show="showLoding" style="position: relative; z-index: 9999" text=""></loading>
     <!--提示信息-->
     <toast v-model="errorShow" type="warn" is-show-mask :time="2000" :text="errorContent"></toast>
     <toast v-model="successShow" type="primary" is-show-mask :time="2000" :text="successContent"></toast>
@@ -76,7 +76,7 @@
           "operateUserID": "",
           "operateUserName": "",
           "pcName": "",
-          "ui_ID": this.userInfo.ui_ID
+          "sm_ui_ID": this.userInfo.sm_ui_ID
         };
         this.$store.dispatch('initUserInfromation', selectUser)
           .then(() => {
@@ -95,6 +95,7 @@
         setTimeout(() => {
           if (this.$refs.fileToUpload) {
             this.$refs.fileToUpload.addEventListener('change', () => {
+              this.showLoding = true;
               let file = this.$refs.fileToUpload.files[0];
               var fd = new FormData();
               fd.append("fileUpload", file);
@@ -106,6 +107,7 @@
                   let obj = JSON.parse(xhr.responseText);
                   this.headImageUrl = obj.data;
                   this.$store.commit('setHeadImage', obj.data)
+                  this.showLoding = false;
                 }
               }
             })

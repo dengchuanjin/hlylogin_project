@@ -19,13 +19,6 @@
       </alert>
     </div>
 
-    <div class="qrCode">
-      <x-button type="primary" @click.native="showACode">生成供应商推广二维码</x-button>
-      <alert v-model="showqrAgainCode" title="供应商推广二维码">
-        <qrcode :value="linkAgain" type="img"></qrcode>
-      </alert>
-    </div>
-
     <!--提示信息-->
     <toast v-model="errorShow" type="warn" is-show-mask :time="2000" :text="errorContent"></toast>
     <toast v-model="successShow" type="primary" is-show-mask :time="2000" :text="successContent"></toast>
@@ -55,15 +48,13 @@
         linkAddress: '',
         userInfo: '',
         showqrCode: false,
-        linkAgain: '',
         showqrAgainCode: false,
 
       }
     },
     created() {
       this.userInfo = JSON.parse(sessionStorage.getItem('scoresumList'));
-      this.linkAddress = this.userInfo.userExtendCode;
-      this.linkAgain = this.userInfo.proxyExtendCode;
+      this.linkAddress = this.userInfo.sm_ui_ExtensionURL;
     },
     methods: {
       //复制功能

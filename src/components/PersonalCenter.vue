@@ -9,12 +9,13 @@
     <div class="VIPBox" v-show="showVIP">
       <div class="personalData clearfix" @click="goPersonalData">
         <div class="headPortrait">
-          <img v-show="userInfromationObj.ui_HeadImage" :src="userInfromationObj.ui_HeadImage?userInfromationObj.ui_HeadImage:''">
-          <img src="../assets/img/center.png" v-show="!userInfromationObj.ui_HeadImage" alt="">
+          <img v-show="userInfromationObj.sm_ui_HeadImage"
+               :src="userInfromationObj.sm_ui_HeadImage?userInfromationObj.sm_ui_HeadImage:''">
+          <img src="../assets/img/center.png" v-show="!userInfromationObj.sm_ui_HeadImage" alt="">
         </div>
         <div class="nickname">
-          <strong>{{userInfromationObj.ui_Name}}</strong>
-          <span>{{userInfromationObj.ui_UserCode}}</span>
+          <strong>{{userInfromationObj.sm_ui_Name}}</strong>
+          <span>{{userInfromationObj.sm_ui_UserCode}}</span>
         </div>
         <div class="goIcon"></div>
       </div>
@@ -79,13 +80,19 @@
           "operateUserID": "",
           "operateUserName": "",
           "pcName": "",
-          "ui_ID": this.userInfo.ui_ID
+          "sm_ui_ID": this.userInfo.sm_ui_ID
         };
         this.$store.dispatch('initUserInfromation', selectUser)
+          .then(() => {
+          }, err => {
+            this.errorShow = true;
+            this.errorContent = err;
+          })
       },
       //退出登录
       noLogin() {
         this.$router.push({name: 'Login'})
+        sessionStorage.removeItem('scoresumList')
       },
       //go个人信息
       goPersonalData() {
@@ -126,7 +133,9 @@
         }
         this.VIPQrcodeUrl = JSON.parse(sessionStorage.getItem('scoresumList')).userExtendCode;
         this.agentQrcodeUrl = JSON.parse(sessionStorage.getItem('scoresumList')).proxyExtendCode;
-      };
+      }else {
+        this.$router.push({name:'Login'})
+      }
       this.initData();
     }
   }

@@ -56,10 +56,10 @@
           "operateUserID": "",//操作员编码
           "operateUserName": "",//操作员名称
           "pcName": "",//机器码
-          "userCode": this.userInfo.ui_ID,//用户编码
+          "userCode": this.userInfo.sm_ui_ID,//用户编码
         };
         this.$store.dispatch('searchUserIntegral', selectUserTotalScore)
-          .then(suc => {
+          .then(() => {
             this.showLoding = false;
           }, err => {
             this.errorShow = true;

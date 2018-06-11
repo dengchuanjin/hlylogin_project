@@ -45,7 +45,7 @@ const mutations = {
     state.moneyDetailsList = data;
   },
   setHeadImage(state,str){
-    state.userInfromationObj.ui_HeadImage = str;
+    state.userInfromationObj.sm_ui_HeadImage = str;
   }
 }
 export default {

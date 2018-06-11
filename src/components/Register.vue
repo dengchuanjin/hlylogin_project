@@ -53,6 +53,19 @@
           this.errorShow = true;
           return
         }
+        let num = 60;
+        this.getVerificationCode = num + 's后重新获取';
+        let timer = setInterval(() => {
+          if (num == 0) {
+            this.codeDisabled = false;
+            this.getVerificationCode = '重新获取验证码'
+            clearInterval(timer);
+          } else {
+            this.codeDisabled = true;
+            num--;
+            this.getVerificationCode = num + 's后重新获取';
+          }
+        }, 1000);
         let SendMessage = {
           "loginUserID": "huileyou",
           "loginUserPass": "123",
@@ -62,27 +75,15 @@
           .then(suc => {
             this.successContent = suc;
             this.successShow = true;
-            let num = 59;
-            let timer = setInterval(() => {
-              if (num == 0) {
-                this.codeDisabled = false;
-                this.getVerificationCode = '重新获取验证码'
-                clearInterval(timer);
-              } else {
-                this.codeDisabled = true;
-                this.getVerificationCode = num + 's后重新获取';
-                num--;
-              }
-            }, 1000);
           }, err => {
             this.errorContent = err;
             this.errorShow = true;
+            this.getVerificationCode = '获取动态验证码'
+            clearInterval(timer);
           })
       },
       //注册提交
       registerSubmit() {
-        console.log(this.extensionID)
-        return
         if (this.telephoneNumber == '') {
           this.errorContent = '请输入电话号码！';
           this.errorShow = true;
@@ -130,7 +131,6 @@
           .then(suc => {
             sessionStorage.setItem('scoresumList', JSON.stringify(suc));
             this.$router.push({name: 'PersonalCenter'})
-
           }, err => {
             this.errorShow = true;
             this.errorContent = err;

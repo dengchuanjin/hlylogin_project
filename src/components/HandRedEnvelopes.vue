@@ -16,11 +16,13 @@
     <!--提示信息-->
     <toast v-model="errorShow" type="warn" is-show-mask :time="2000" :text="errorContent"></toast>
     <toast v-model="successShow" type="primary" is-show-mask :time="2000" :text="successContent"></toast>
+    <!--加载-->
+    <loading :show="showLoding" text=""></loading>
   </div>
 </template>
 <script>
   import {mapGetters} from 'vuex'
-  import {Toast, XHeader, Group, Cell, Divider, XInput, XButton, Alert} from 'vux'
+  import {Toast, XHeader, Group, Cell, Divider, XInput, XButton, Alert, Loading} from 'vux'
 
   export default {
     computed: mapGetters([]),
@@ -32,7 +34,8 @@
       Divider,
       XInput,
       XButton,
-      Alert
+      Alert,
+      Loading
     },
     data() {
       return {
@@ -45,7 +48,8 @@
         errorContent: '',
         successContent: '',
         maxLength: 6,
-        userInfo:'',
+        userInfo: '',
+        showLoding: false,
       }
     },
     created() {
@@ -72,25 +76,27 @@
           this.errorContent = '请输入完整的支付密码';
           return
         }
+        this.showLoding = true;
         let addShare = {
           "loginUserID": "huileyou",
           "loginUserPass": "123",
-          "operateUserID": this.userInfo.ui_ID,//操作员编码
+          "operateUserID": this.userInfo.sm_ui_ID,//操作员编码
           "operateUserName": "",
           "pcName": "",
           "totalMoney": this.totalMoney,//推广金额
           "totalTimes": this.totalNumber,//分享个数
           "payCode": this.payCode,//支付密码
-          "userType":"0"
         };
         this.$store.dispatch('addHandRedEnvelopes', addShare)
           .then(suc => {
+            this.showLoding = false;
             this.successShow = true;
             this.successContent = suc;
             setTimeout(() => {
               this.$router.push({name: 'RedEnvelopes'})
             }, 1000)
           }, err => {
+            this.showLoding = false;
             this.errorShow = true;
             this.errorContent = err;
           })

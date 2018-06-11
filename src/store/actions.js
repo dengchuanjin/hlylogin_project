@@ -66,7 +66,7 @@ export default {
         .then(data => {
           var data = data.data;
           if (Number(data.resultcode) == 200) {
-            relove(data.data[0].sm_up_Money);
+            relove(data.data[0]);
           } else {
             reject(data.resultcontent);
           }
@@ -395,6 +395,24 @@ export default {
             var data = data.data;
             commit('initMoneyDetails',data.data)
             relove()
+          }else {
+            reject(data.resultcontent)
+          }
+        })
+    })
+  },
+  //修改支付密码
+  setPayPasswordSubmit({commit}, data) {
+    return new Promise(function (relove, reject) {
+      axios.post('http://webservice.1000da.com.cn/UserPot/Update', JSON.stringify(data), {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      })
+        .then(data => {
+          if (Number(data.data.resultcode) == 200) {
+            var data = data.data;
+            relove(data.resultcontent)
           }else {
             reject(data.resultcontent)
           }

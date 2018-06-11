@@ -1,35 +1,40 @@
 <template>
   <div>
-    <x-header>编辑个人资料</x-header>
-    <group>
-      <x-input title="昵称" text-align="right" v-model="userInfromationObj.ui_Name" placeholder="请输入昵称"></x-input>
-      <x-input title="身份证号" text-align="right" v-model="userInfromationObj.ui_CertNo" placeholder="请输入身份证号"></x-input>
-      <x-input title="手机号" text-align="right" v-model="userInfromationObj.ui_Phone" placeholder="请输入手机号"></x-input>
+    <x-header style="position: fixed;left: 0; top: 0; z-index: 999; width: 100%;">编辑个人资料</x-header>
+    <group style="padding-top: 40px;">
+      <x-input title="昵称" text-align="right" v-model="userInfromationObj.sm_ui_Name" placeholder="请输入昵称"></x-input>
+      <x-input title="身份证号" text-align="right" v-model="userInfromationObj.sm_ui_CertNo"
+               placeholder="请输入身份证号"></x-input>
+      <x-input title="手机号" text-align="right" v-model="userInfromationObj.sm_ui_Phone" placeholder="请输入手机号"></x-input>
       <datetime
-        v-model="userInfromationObj.ui_Birthday"
+        v-model="userInfromationObj.sm_ui_Birthday"
         @on-change="change"
         start-date="1970-01-01"
         :end-date="endTiem"
         title="生日"
       ></datetime>
       <cell title="性别">
-        <button-tab style="width: 200px;" v-model="userInfromationObj.ts_ui_Sex">
-          <button-tab-item @on-item-click="consoleIndex()">男</button-tab-item>
+        <button-tab style="width: 200px;" v-model="userInfromationObj.sm_ui_Sex">
           <button-tab-item @on-item-click="consoleIndex()">女</button-tab-item>
+          <button-tab-item @on-item-click="consoleIndex()">男</button-tab-item>
         </button-tab>
       </cell>
-      <x-input title="电子邮箱" text-align="right" v-model="userInfromationObj.ts_ui_Email" placeholder="请输入电子邮箱"></x-input>
-      <cell title="省" is-link @click.native="showProvice">{{userInfromationObj.proviceName}}</cell>
-      <cell title="市" is-link @click.native="showCity">{{userInfromationObj.cityName}}</cell>
-      <x-input title="详细地址" text-align="right" v-model="userInfromationObj.ui_Address" placeholder="请输入详细地址"></x-input>
+      <x-input title="电子邮箱" text-align="right" v-model="userInfromationObj.sm_ui_Email" placeholder="请输入电子邮箱"></x-input>
+      <x-input title="微信号" text-align="right" v-model="userInfromationObj.sm_ui_WechatNo"
+               placeholder="请输入微信号"></x-input>
+      <x-input title="QQ号" text-align="right" v-model="userInfromationObj.sm_ui_QQNo" placeholder="请输入QQ号"></x-input>
+      <cell title="省" is-link @click.native="showProvice">{{userInfromationObj.sm_ui_ProviceName}}</cell>
+      <cell title="市" is-link @click.native="showCity">{{userInfromationObj.sm_ui_CityName}}</cell>
+      <x-input title="详细地址" text-align="right" v-model="userInfromationObj.sm_ui_Address"
+               placeholder="请输入详细地址"></x-input>
       <cell title="婚姻状况">
-        <button-tab style="width: 200px;" v-model="userInfromationObj.ui_MarryStatus">
+        <button-tab style="width: 200px;" v-model="userInfromationObj.sm_ui_MarryStatus">
           <button-tab-item @on-item-click="stateIndex()">未婚</button-tab-item>
           <button-tab-item @on-item-click="stateIndex()">已婚</button-tab-item>
         </button-tab>
       </cell>
-      <cell title="职业" is-link @click.native="showOccupation">{{userInfromationObj.ts_ui_JobName}}</cell>
-      <cell title="学历" is-link @click.native="showEducation">{{userInfromationObj.ts_ui_EducationName}}</cell>
+      <cell title="职业" is-link @click.native="showOccupation">{{userInfromationObj.sm_ui_JobName}}</cell>
+      <cell title="学历" is-link @click.native="showEducation">{{userInfromationObj.sm_ui_EducationName}}</cell>
     </group>
     <div class="submit">
       <x-button type="primary" @click.native="updateSubmit">确认</x-button>
@@ -110,9 +115,11 @@
         errorContent: '',
         successShow: false,
         successContent: '',
+        userInfo: '',
       }
     },
     created() {
+      this.userInfo = JSON.parse(sessionStorage.getItem('scoresumList'));
       let t = new Date();
       let year = t.getFullYear();
       let month = this.addZroe(t.getMonth() + 1);
@@ -121,6 +128,9 @@
       this.initProvinceList();
       this.initOccupation();
       this.initEducation();
+      if (this.userInfromationObj.sm_ui_Provice) {
+        this.initCityList(this.userInfromationObj.sm_ui_Provice)
+      }
     },
     methods: {
       //选择性别
@@ -128,7 +138,6 @@
       },
       //婚姻状况
       stateIndex() {
-
       },
       //补零
       addZroe(num) {
@@ -156,24 +165,30 @@
       },
       //获取省
       initProvinceList() {
+
         let getAreaProvice = {
           "areaPid": 3337
         }
         this.$store.dispatch('initProvinceData', getAreaProvice)
+          .then(() => {
+          }, err => {
+            this.errorShow = true;
+            this.errorContent = err;
+          })
       },
       //选择省
       changeProvice(item) {
-        this.userInfromationObj.proviceName = item.sm_af_AreaName;
-        this.userInfromationObj.ui_Provice = item.sm_af_AreaID;
-        this.userInfromationObj.cityName = '';
-        this.userInfromationObj.ui_City = '';
+        this.userInfromationObj.sm_ui_ProviceName = item.sm_af_AreaName;
+        this.userInfromationObj.sm_ui_Provice = item.sm_af_AreaID;
+        this.userInfromationObj.sm_ui_CityName = '';
+        this.userInfromationObj.sm_ui_City = '';
         this.showProviceBox = false;
         this.initCityList(item.sm_af_AreaID)
       },
       //选择市
       changeCity(item) {
-        this.userInfromationObj.cityName = item.sm_af_AreaName;
-        this.userInfromationObj.ui_City = item.sm_af_AreaID;
+        this.userInfromationObj.sm_ui_CityName = item.sm_af_AreaName;
+        this.userInfromationObj.sm_ui_City = item.sm_af_AreaID;
         this.cityData = item;
         this.showCityBox = false;
       },
@@ -183,6 +198,11 @@
           "areaPid": id ? id : ''
         }
         this.$store.dispatch('initCityList', getAreaProvice)
+          .then(() => {
+          }, err => {
+            this.errorShow = true;
+            this.errorContent = err;
+          })
       },
       //获取职业
       initOccupation() {
@@ -195,6 +215,11 @@
           "parentID": "38",
         };
         this.$store.dispatch('initOccupation', selectGroupJob)
+          .then(() => {
+          }, err => {
+            this.errorShow = true;
+            this.errorContent = err;
+          })
       },
       //展示职业列表
       showOccupation() {
@@ -206,8 +231,9 @@
       },
       //选择职业
       changeOccupation(item) {
-        this.userInfromationObj.ts_ui_JobID = item.value;
-        this.userInfromationObj.ts_ui_JobName = item.label
+        console.log(item)
+        this.userInfromationObj.sm_ui_JobID = item.value;
+        this.userInfromationObj.sm_ui_JobName = item.label
       },
       //获取学历
       initEducation() {
@@ -220,6 +246,11 @@
           "ui_jb_ParentID": "39",
         };
         this.$store.dispatch('initEducation', selectJob)
+          .then(() => {
+          }, err => {
+            this.errorShow = true;
+            this.errorContent = err;
+          })
       },
       //展示学历列表
       showEducation() {
@@ -231,23 +262,27 @@
       },
       //选择学历
       changeEducation(item) {
-        this.userInfromationObj.ts_ui_EducationID = item.ui_jb_ParentID;
-        this.userInfromationObj.ts_ui_EducationName = item.ts_jb_Name;
+        this.userInfromationObj.sm_ui_EducationID = item.ts_jb_ID;
+        this.userInfromationObj.sm_ui_EducationName = item.ts_jb_Name;
       },
       //修改提交
       updateSubmit() {
+        this.userInfromationObj.sm_ui_ID = this.userInfo.sm_ui_ID;
         let updateUser = {
-          "loginUserID": "huileyou",
-          "loginUserPass": "123",
-          "operateUserID": "",
-          "operateUserName": "",
-          "pcName": "",
-          "data": this.userInfromationObj
-        };
+            "loginUserID": "huileyou",
+            "loginUserPass": "123",
+            "operateUserID": "",
+            "operateUserName": "",
+            "pcName": "",
+            "data": this.userInfromationObj
+          };
         this.$store.dispatch('updatePersonalData', updateUser)
           .then(suc => {
             this.successShow = true;
             this.successContent = suc;
+            setTimeout(()=>{
+              this.$router.push({name:'PersonalData'})
+            },1000)
           }, err => {
             this.errorShow = true;
             this.errorContent = err;
@@ -276,7 +311,7 @@
     bottom: 0;
     z-index: 999;
     overflow: auto;
-    font: 16px/2 "微软雅黑";
+    font: 18px/2 "微软雅黑";
     padding: 10px;
     background-color: #fff;
     color: #999;
@@ -293,7 +328,7 @@
 
   .showProviceBox > li > span {
     display: block;
-    font: 14px/2 "微软雅黑";
+    font: 18px/2 "微软雅黑";
     padding-left: 50px;
   }
 
@@ -309,5 +344,6 @@
   .submit {
     width: 60%;
     margin: 20px auto;
+    padding-bottom: 50px;
   }
 </style>

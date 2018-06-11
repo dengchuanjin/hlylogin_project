@@ -8,6 +8,8 @@ import App from './App'
 import '@/assets/css/reset.css'
 import axios from 'axios'
 import store from './store/index'
+import VueScroller from 'vue-scroller'
+Vue.use(VueScroller)
 Vue.use(VueRouter)
 
 

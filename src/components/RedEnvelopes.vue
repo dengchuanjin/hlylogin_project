@@ -23,7 +23,7 @@
 </template>
 <script>
   import {mapGetters} from 'vuex'
-  import {Toast, XHeader, Group, Cell,Loading} from 'vux'
+  import {Toast, XHeader, Group, Cell, Loading} from 'vux'
 
   export default {
     computed: mapGetters([]),
@@ -47,16 +47,46 @@
         leadMoney: '',
         userInfo: '',
         showLoding: false,
+        payPassword: '',
       }
     },
     created() {
       this.userInfo = JSON.parse(sessionStorage.getItem('scoresumList'));
       this.initData();
+      this.searchMoney();
     },
     methods: {
+      //查询钱包信息
+      searchMoney() {
+        this.showLoding = true;
+        let selectUserPot = {
+          "loginUserID": "huileyou",
+          "loginUserPass": "123",
+          "operateUserID": this.userInfo.sm_ui_ID,//操作员编码
+          "operatePassword": "123",//操作员密码
+          "operateUserName": "",//
+          "pcName": "",
+          "sm_up_ID": this.userInfo.sm_ui_ID,//用户编码
+        };
+        this.$store.dispatch('searchMoney', selectUserPot)
+          .then(moneyObj => {
+            this.payPassword = moneyObj.sm_up_PayCode;
+          }, err => {
+            this.errorShow = true;
+            this.errorContent = err;
+          })
+      },
       //go发红包
       goHandRedEnvelopes() {
-        this.$router.push({name: 'HandRedEnvelopes'})
+        if( this.payPassword == '' || this.payPassword == null ){
+          this.errorShow = true;
+          this.errorContent = '请先设置支付密码';
+          setTimeout(()=>{
+            this.$router.push({name:'WalletDetils'})
+          },1000)
+        }else{
+          this.$router.push({name: 'HandRedEnvelopes'})
+        }
       },
       //go红包明细
       goRedEnvelopesDetails() {
@@ -68,7 +98,7 @@
         let getShare = {
           "loginUserID": "huileyou",
           "loginUserPass": "123",
-          "operateUserID": this.userInfo.ui_ID,//操作员编码
+          "operateUserID": this.userInfo.sm_ui_ID,//操作员编码
           "operateUserName": "",
           "pcName": "",
         };

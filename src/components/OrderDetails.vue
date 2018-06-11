@@ -1,39 +1,85 @@
 <template>
   <div>
-    <x-header style="position: fixed;left: 0; top: 0; z-index: 999; width: 100%;" :right-options="{showMore: true}"
-              @on-click-more="showMenus = true">我的订单({{orderType}})
-    </x-header>
 
-    <div id="wrap">
-      <div id="Home">
-        <div id="load">
-          <span class="loadImg"></span>
-          <span class="loadImg2"></span>
-          <span class="loadText">下拉刷新</span>
-        </div>
-        <ul class="orderDataList">
-          <li v-for="item,index in orderDataList">
-            <div class="clearfix"><strong>产品信息</strong><span>{{item.oi_OrderName}}</span></div>
-            <div class="clearfix"><strong>订单金额</strong><span>{{item.oi_SellMoney + ' 元'}}</span></div>
-            <div class="clearfix"><strong>下单时间</strong><span>{{item.oi_CreateTime}}</span></div>
-            <div class="clearfix"><strong>订单号</strong><span>{{item.oi_OrderID}}</span></div>
-            <div class="clearfix"><strong>订单类型</strong><span>{{item.oi_OrderType}}</span></div>
-            <div class="clearfix"><strong>数量</strong><span>{{item.oi_Number}}</span></div>
-            <div class="clearfix"><strong>支付状态</strong><span>{{item.oi_OrderStatus == 0 ? '未支付' : '已支付'}}</span></div>
-            <div class="clearfix"><strong>出票状态</strong><span>{{item.oi_OutStatus == 0 ? '商家出单中' : '商家出单成功'}}</span>
-            </div>
-            <div class="clearfix"><strong>操作</strong><span><x-button type="warn" mini
-                                                                     @click.native="deleteOrder(item.oi_OrderID)">删除</x-button></span>
-            </div>
-          </li>
-        </ul>
-        <div id="footerLoad">
-          <span class="footLoadImg"></span>
-          <span class="footLoadImg2"></span>
-          <span class="footLoadText">加载更多</span>
-        </div>
-      </div>
-    </div>
+    <section class="re">
+      <x-header :right-options="{showMore: true}"
+      @on-click-more="showMenus = true">我的订单({{orderType}})
+      </x-header>
+    </section>
+    <scroller
+              :on-refresh="refresh"
+              :on-infinite="infinite"
+              ref="my_scroller"
+              refresh-layer-color="#4b8bf4"
+              loading-layer-color="#ec4949"
+    >
+      <!-- custom refresh spinner, use default `spinner` & viewBox 0,0,64,64 class -->
+      <svg class="spinner" style="stroke: #4b8bf4;" slot="refresh-spinner" viewBox="0 0 64 64">
+        <g stroke-width="7" stroke-linecap="round">
+          <line x1="10" x2="10" y1="27.3836" y2="36.4931">
+            <animate attributeName="y1" dur="750ms" values="16;18;28;18;16;16" repeatCount="indefinite"></animate>
+            <animate attributeName="y2" dur="750ms" values="48;46;36;44;48;48" repeatCount="indefinite"></animate>
+            <animate attributeName="stroke-opacity" dur="750ms" values="1;.4;.5;.8;1;1"
+                     repeatCount="indefinite"></animate>
+          </line>
+          <line x1="24" x2="24" y1="18.6164" y2="45.3836">
+            <animate attributeName="y1" dur="750ms" values="16;16;18;28;18;16" repeatCount="indefinite"></animate>
+            <animate attributeName="y2" dur="750ms" values="48;48;46;36;44;48" repeatCount="indefinite"></animate>
+            <animate attributeName="stroke-opacity" dur="750ms" values="1;1;.4;.5;.8;1"
+                     repeatCount="indefinite"></animate>
+          </line>
+          <line x1="38" x2="38" y1="16.1233" y2="47.8767">
+            <animate attributeName="y1" dur="750ms" values="18;16;16;18;28;18" repeatCount="indefinite"></animate>
+            <animate attributeName="y2" dur="750ms" values="44;48;48;46;36;44" repeatCount="indefinite"></animate>
+            <animate attributeName="stroke-opacity" dur="750ms" values=".8;1;1;.4;.5;.8"
+                     repeatCount="indefinite"></animate>
+          </line>
+          <line x1="52" x2="52" y1="16" y2="48">
+            <animate attributeName="y1" dur="750ms" values="28;18;16;16;18;28" repeatCount="indefinite"></animate>
+            <animate attributeName="y2" dur="750ms" values="36;44;48;48;46;36" repeatCount="indefinite"></animate>
+            <animate attributeName="stroke-opacity" dur="750ms" values=".5;.8;1;1;.4;.5"
+                     repeatCount="indefinite"></animate>
+          </line>
+        </g>
+      </svg>
+
+      <ul class="orderDataList padd">
+        <li class="row" :class="{'grey-bg': index % 2 == 0}" v-for="item,index in orderDataList">
+          <div class="clearfix"><strong>产品信息</strong><span>{{item.oi_OrderName}}</span></div>
+          <div class="clearfix"><strong>订单金额</strong><span>{{item.oi_SellMoney + ' 元'}}</span></div>
+          <div class="clearfix"><strong>下单时间</strong><span>{{item.oi_CreateTime}}</span></div>
+          <div class="clearfix"><strong>订单号</strong><span>{{item.oi_OrderID}}</span></div>
+          <div class="clearfix"><strong>订单类型</strong><span>{{item.oi_OrderType}}</span></div>
+          <div class="clearfix"><strong>数量</strong><span>{{item.oi_Number}}</span></div>
+          <div class="clearfix"><strong>支付状态</strong><span>{{item.oi_OrderStatus == 0 ? '未支付' : '已支付'}}</span></div>
+          <div class="clearfix"><strong>出票状态</strong><span>{{item.oi_OutStatus == 0 ? '商家出单中' : '商家出单成功'}}</span>
+          </div>
+          <div class="clearfix"><strong>操作</strong><span><x-button type="warn" mini
+                                                                   @click.native="deleteOrder(item.oi_OrderID)">删除</x-button></span>
+          </div>
+        </li>
+      </ul>
+      <!-- custom infinite spinner -->
+      <svg class="spinner" style="fill: #ec4949;" slot="infinite-spinner" viewBox="0 0 64 64">
+        <g>
+          <circle cx="16" cy="32" stroke-width="0" r="3">
+            <animate attributeName="fill-opacity" dur="750ms" values=".5;.6;.8;1;.8;.6;.5;.5"
+                     repeatCount="indefinite"></animate>
+            <animate attributeName="r" dur="750ms" values="3;3;4;5;6;5;4;3" repeatCount="indefinite"></animate>
+          </circle>
+          <circle cx="32" cy="32" stroke-width="0" r="3.09351">
+            <animate attributeName="fill-opacity" dur="750ms" values=".5;.5;.6;.8;1;.8;.6;.5"
+                     repeatCount="indefinite"></animate>
+            <animate attributeName="r" dur="750ms" values="4;3;3;4;5;6;5;4" repeatCount="indefinite"></animate>
+          </circle>
+          <circle cx="48" cy="32" stroke-width="0" r="4.09351">
+            <animate attributeName="fill-opacity" dur="750ms" values=".6;.5;.5;.6;.8;1;.8;.6"
+                     repeatCount="indefinite"></animate>
+            <animate attributeName="r" dur="750ms" values="5;4;3;3;4;5;6;5" repeatCount="indefinite"></animate>
+          </circle>
+        </g>
+      </svg>
+    </scroller>
     <div>
       <actionsheet :menus="menus" v-model="showMenus" show-cancel @on-click-menu="changeOrderType"></actionsheet>
     </div>
@@ -46,8 +92,7 @@
 </template>
 <script>
   import {mapGetters} from 'vuex'
-  import {XHeader, Actionsheet, XButton,Toast,Loading} from 'vux'
-  import Scroll from '../assets/public/HomeScroll.js'
+  import {XHeader, Actionsheet, XButton, Toast, Loading} from 'vux'
 
   export default {
     computed: mapGetters([
@@ -73,7 +118,7 @@
         },
         showMenus: false,
         userInfo: '',
-        rows: 10,
+        rows: 0,
         id: '',
         orderType: '全部订单',
         errorShow: false,
@@ -85,10 +130,10 @@
     },
     created() {
       this.userInfo = JSON.parse(sessionStorage.getItem('scoresumList'));
-      this.initData();
     },
     mounted() {
-      Scroll(this)
+      this.top = 1
+      this.bottom = 20
     },
     methods: {
       initData(id, rows) {
@@ -99,16 +144,14 @@
           "operateUserID": "",
           "operateUserName": "",
           "pcName": "",
-          "huiuserid": this.userInfo.ui_ID,
+          "huiuserid": this.userInfo.sm_ui_ID,
           "orderType": id ? id : '',
           "page": "1",
-          "rows": rows ? rows : 10,
-          "isDelete":0
+          "rows": rows ? rows : 5,
+          "isDelete": 0
         };
-        this.$store.dispatch('getOrderData', getUserOrderDetail)
-         .then(()=>{
-          this.showLoding = false;
-         })
+        return this.$store.dispatch('getOrderData', getUserOrderDetail)
+
       },
       //选择订单类型
       changeOrderType(menuKey, menuValue) {
@@ -126,20 +169,53 @@
           "pcName": "",
           "orderID": id ? id : ''
         };
-        this.$store.dispatch('deleteOrder',deleteOrder)
+        this.$store.dispatch('deleteOrder', deleteOrder)
           .then(suc => {
             this.successShow = true;
             this.successContent = suc;
-            this.initData();
+            this.initData()
+              .then(() => {
+                this.showLoding = false;
+              })
           }, err => {
             this.errorShow = true;
             this.errorContent = err;
           })
+      },
+      //上拉刷新
+      refresh(done) {
+        this.initData(this.id,5)
+          .then(() => {
+            this.showLoding = false;
+            done(true)
+          })
+
+      },
+      //下拉加载
+      infinite(done) {
+        this.rows += 5;
+        this.initData(this.id, this.rows)
+          .then(() => {
+            this.showLoding = false;
+            done(true)
+          })
+
       }
     },
   }
 </script>
 <style scoped>
+  .padd{
+    padding-top: 50px !important;
+  }
+  .re {
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 111;
+  }
   .vux-header {
     background-color: #288DF7;
   }
@@ -182,94 +258,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-
-  #load {
-    position: absolute;
-    left: 0;
-    top: -2.4rem;
-    width: 100%;
-    height: 2.4rem;
-  }
-
-  .loadImg {
-    position: absolute;
-    left: 2.5rem;
-    top: .2rem;
-    width: .8rem;
-    height: 2rem;
-    background: url("../assets/img/load.png") no-repeat center;
-    background-size: cover;
-  }
-
-  .loadImg2 {
-    display: none;
-    position: absolute;
-    left: 4rem;
-    top: .95rem;
-    width: .5rem;
-    height: .5rem;
-    background: url("../assets/img/loading.gif") no-repeat center;
-    background-size: cover;
-  }
-
-  .loadText {
-    display: block;
-    font: 1rem/2.4rem "宋体";
-    color: #fff;
-    text-align: center;
-  }
-
-  #footerLoad {
-    position: absolute;
-    left: 0;
-    bottom: -2.4rem;
-    width: 100%;
-    height: 2.4rem;
-  }
-
-  .footLoadText {
-    display: block;
-    font: 1rem/2.4rem "宋体";
-    color: #fff;
-    text-align: center;
-  }
-
-  .footLoadImg {
-    position: absolute;
-    left: 2.5rem;
-    top: .2rem;
-    width: .8rem;
-    height: 2rem;
-    background: url("../assets/img/load.png") no-repeat center;
-    background-size: cover;
-  }
-
-  .footLoadImg2 {
-    display: none;
-    position: absolute;
-    left: 4rem;
-    top: .95rem;
-    width: .8rem;
-    height: .8rem;
-    background: url("../assets/img/loading.gif") no-repeat center;
-    background-size: cover;
-  }
-
-  #wrap {
-    position: absolute;
-    top: 50px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    overflow: hidden;
-    background: #282828;
-  }
-
-  #Home {
-    position: relative;
-    background: #fff;
   }
 
 
