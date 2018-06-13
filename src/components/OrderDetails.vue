@@ -158,6 +158,9 @@
         this.id = menuKey;
         this.orderType = menuValue;
         this.initData(this.id)
+          .then(()=>{
+            this.showLoding = false;
+          })
       },
       //删除订单
       deleteOrder(id) {

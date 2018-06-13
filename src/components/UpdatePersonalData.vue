@@ -20,9 +20,6 @@
         </button-tab>
       </cell>
       <x-input title="电子邮箱" text-align="right" v-model="userInfromationObj.sm_ui_Email" placeholder="请输入电子邮箱"></x-input>
-      <x-input title="微信号" text-align="right" v-model="userInfromationObj.sm_ui_WechatNo"
-               placeholder="请输入微信号"></x-input>
-      <x-input title="QQ号" text-align="right" v-model="userInfromationObj.sm_ui_QQNo" placeholder="请输入QQ号"></x-input>
       <cell title="省" is-link @click.native="showProvice">{{userInfromationObj.sm_ui_ProviceName}}</cell>
       <cell title="市" is-link @click.native="showCity">{{userInfromationObj.sm_ui_CityName}}</cell>
       <x-input title="详细地址" text-align="right" v-model="userInfromationObj.sm_ui_Address"
@@ -263,7 +260,7 @@
       //选择学历
       changeEducation(item) {
         this.userInfromationObj.sm_ui_EducationID = item.ts_jb_ID;
-        this.userInfromationObj.sm_ui_EducationName = item.ts_jb_Name;
+          this.userInfromationObj.sm_ui_EducationName = item.ts_jb_Name;
       },
       //修改提交
       updateSubmit() {

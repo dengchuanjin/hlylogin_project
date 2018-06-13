@@ -24,7 +24,7 @@
       title="选择头像"
       @on-hide="replaceImage"
     >
-      <input type="file" name="fileToUpload" id="fileToUpload" ref="fileToUpload"/>
+      <input type="file" name="fileToUpload" id="fileToUpload" ref="upload"/>
 
       <img :src="headImageUrl" alt="" width="70" height="70">
     </alert>
@@ -88,48 +88,56 @@
       },
       //更换头像
       replaceHeadImage() {
-        this.fileSelected()
+        this.uploaNode()
         this.showHead = true;
       },
-      fileSelected() {
+
+      uploadToOSS(file) {
+        return new Promise((relove,reject)=>{
+          var fd = new FormData();
+          fd.append("fileToUpload", file);
+          var xhr = new XMLHttpRequest();
+          xhr.open("POST", "http://hly.1000da.com.cn/OSSFile/PostToOSS");
+          xhr.send(fd);
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+              if (xhr.responseText) {
+                var data = xhr.responseText
+                relove(JSON.parse(data))
+              }
+            }else{
+
+            }
+          }
+        })
+      },
+      //添加图片
+      uploaNode() {
+        this.headImageUrl = '';
         setTimeout(() => {
-          if (this.$refs.fileToUpload) {
-            this.$refs.fileToUpload.addEventListener('change', () => {
-              this.showLoding = true;
-              let file = this.$refs.fileToUpload.files[0];
-              var fd = new FormData();
-              fd.append("fileUpload", file);
-              var xhr = new XMLHttpRequest();
-              xhr.open("POST", "http://image.1000da.com.cn/PostImage/PostAppStore");
-              xhr.send(fd);
-              xhr.onreadystatechange = () => {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                  let obj = JSON.parse(xhr.responseText);
-                  this.headImageUrl = obj.data;
-                  this.$store.commit('setHeadImage', obj.data)
-                  this.showLoding = false;
-                }
+          if (this.$refs.upload) {
+            this.$refs.upload.addEventListener('change', data => {
+              for (var i = 0; i < this.$refs.upload.files.length; i++) {
+                this.uploadToOSS(this.$refs.upload.files[i])
+                  .then(data => {
+                    if (data) {
+                      this.headImageUrl = '';
+                      this.headImageUrl = data.data;
+                    } else {
+                      this.$notify({
+                        message: '图片地址不存在!',
+                        type: 'error'
+                      });
+                    }
+                  })
               }
             })
-          }
+          };
         }, 30)
       },
 
-
-      uploadFile() {
-        var fd = new FormData();
-        fd.append("fileToUpload", document.getElementById('fileToUpload').files[0]);
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/PostImage/PostFile");
-        xhr.send(fd);
-        xhr.onreadystatechange = () => {
-          if (xhr.readyState == 4 && xhr.status == 200) {
-            document.getElementById("myDiv").innerHTML = xhr.responseText;
-          }
-        }
-      },
-
       replaceImage() {
+        this.userInfromationObj.sm_ui_HeadImage = this.headImageUrl;
         //修改提交
         let updateUser = {
           "loginUserID": "huileyou",
