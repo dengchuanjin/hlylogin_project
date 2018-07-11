@@ -18,8 +18,7 @@
         <qrcode :value="linkAddress" type="img"></qrcode>
       </alert>
     </div>
-
-    <!--提示信息-->
+    <!-- 提示信息 -->
     <toast v-model="errorShow" type="warn" is-show-mask :time="2000" :text="errorContent"></toast>
     <toast v-model="successShow" type="primary" is-show-mask :time="2000" :text="successContent"></toast>
   </div>
@@ -27,7 +26,6 @@
 <script>
   import {mapGetters} from 'vuex'
   import {XHeader, Group, Cell, Toast, XButton, Qrcode, Alert} from 'vux'
-
   export default {
     computed: mapGetters([]),
     components: {
@@ -49,7 +47,6 @@
         userInfo: '',
         showqrCode: false,
         showqrAgainCode: false,
-
       }
     },
     created() {
@@ -76,14 +73,12 @@
         this.showqrAgainCode = true;
       }
     },
-
   }
 </script>
 <style scoped>
   .vux-header {
     background-color: #288DF7;
   }
-
   .btn {
     background-color: #1AAD19;
     border: 1px solid #999;
@@ -95,12 +90,10 @@
     color: #fff;
     outline: none;
   }
-
   .qrCode {
     margin-top: 20px;
     text-align: center;
   }
-
   .qrCode > button {
     width: 70%;
     margin-bottom: 20px;

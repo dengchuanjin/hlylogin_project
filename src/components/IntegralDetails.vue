@@ -20,7 +20,6 @@
 <script>
   import {mapGetters} from 'vuex'
   import {XHeader, Group, Cell, Toast, Loading} from 'vux'
-
   export default {
     computed: mapGetters([
       'searchUserIntegralList'

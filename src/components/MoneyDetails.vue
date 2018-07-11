@@ -1,8 +1,6 @@
 <template>
   <div>
     <x-header style="position: fixed;left: 0; top: 0; z-index: 999; width: 100%;">消费明细</x-header>
-
-
     <scroller
       :on-refresh="refresh"
       :on-infinite="infinite"
@@ -45,7 +43,6 @@
           <span>支付时间: {{item.sm_pd_CostTime}}</span>
         </li>
       </ul>
-
       <svg class="spinner" style="fill: #ec4949;" slot="infinite-spinner" viewBox="0 0 64 64">
         <g>
           <circle cx="16" cy="32" stroke-width="0" r="3">
@@ -66,7 +63,6 @@
         </g>
       </svg>
     </scroller>
-
     <div id="wrap">
       <div id="Home">
         <div id="load">
@@ -74,7 +70,6 @@
           <span class="loadImg2"></span>
           <span class="loadText">下拉刷新</span>
         </div>
-
         <div id="footerLoad">
           <span class="footLoadImg"></span>
           <span class="footLoadImg2"></span>
@@ -82,19 +77,15 @@
         </div>
       </div>
     </div>
-
     <!--提示信息-->
     <toast v-model="errorShow" type="warn" is-show-mask :time="2000" :text="errorContent"></toast>
-
     <!--加载-->
     <loading :show="showLoding" text=""></loading>
-
   </div>
 </template>
 <script>
   import {mapGetters} from 'vuex'
   import {XHeader, Toast, Loading} from 'vux'
-
   export default {
     computed: mapGetters([
       'moneyDetailsList'
@@ -154,7 +145,6 @@
           "rows": rows ? rows : 10
         };
         return this.$store.dispatch('initMoneyDetails', getUserPotInfo)
-
       },
       //上拉刷新
       refresh(done) {
@@ -163,7 +153,6 @@
             this.showLoding = false;
             done(true)
           })
-
       },
       //下拉加载
       infinite(done) {
@@ -173,7 +162,6 @@
             this.showLoding = false;
             done(true)
           })
-
       }
     },
     mounted() {

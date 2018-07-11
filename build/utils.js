@@ -3,14 +3,12 @@ const path = require('path')
 const config = require('../config')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const pkg = require('../package.json')
-
 exports.assetsPath = function (_path) {
   const assetsSubDirectory = process.env.NODE_ENV === 'production'
     ? config.build.assetsSubDirectory
     : config.dev.assetsSubDirectory
   return path.posix.join(assetsSubDirectory, _path)
 }
-
 exports.cssLoaders = function (options) {
   options = options || {}
 
@@ -20,14 +18,12 @@ exports.cssLoaders = function (options) {
       sourceMap: options.sourceMap
     }
   }
-
   var postcssLoader = {
     loader: 'postcss-loader',
     options: {
       sourceMap: options.sourceMap
     }
   }
-
   // generate loader string to be used with extract text plugin
   function generateLoaders (loader, loaderOptions) {
     const loaders = options.usePostCSS ? [cssLoader, postcssLoader] : [cssLoader]
@@ -39,7 +35,6 @@ exports.cssLoaders = function (options) {
         })
       })
     }
-
     // Extract CSS when that option is specified
     // (which is the case during production build)
     if (options.extract) {
@@ -52,7 +47,6 @@ exports.cssLoaders = function (options) {
       return ['vue-style-loader'].concat(loaders)
     }
   }
-
   // https://vue-loader.vuejs.org/en/configurations/extract-css.html
   return {
     css: generateLoaders(),
@@ -64,8 +58,7 @@ exports.cssLoaders = function (options) {
     styl: generateLoaders('stylus')
   }
 }
-
-// Generate loaders for standalone style files (outside of .vue)
+// Glenerate oaders for standalone style files (outside of .vue)
 exports.styleLoaders = function (options) {
   const output = []
   const loaders = exports.cssLoaders(options)
@@ -78,7 +71,6 @@ exports.styleLoaders = function (options) {
   }
   return output
 }
-
 exports.createNotifierCallback = function () {
   const notifier = require('node-notifier')
 
@@ -87,7 +79,6 @@ exports.createNotifierCallback = function () {
       return
     }
     const error = errors[0]
-
     const filename = error.file && error.file.split('!').pop()
     notifier.notify({
       title: pkg.name,

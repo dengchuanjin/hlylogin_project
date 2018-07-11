@@ -42,7 +42,6 @@
           </line>
         </g>
       </svg>
-
       <ul class="orderDataList padd">
         <li class="row" :class="{'grey-bg': index % 2 == 0}" v-for="item,index in orderDataList">
           <div class="clearfix"><strong>产品信息</strong><span>{{item.oi_OrderName}}</span></div>
@@ -55,7 +54,7 @@
           <div class="clearfix"><strong>出票状态</strong><span>{{item.oi_OutStatus == 0 ? '商家出单中' : '商家出单成功'}}</span>
           </div>
           <div class="clearfix"><strong>操作</strong><span><x-button type="warn" mini
-                                                                   @click.native="deleteOrder(item.oi_OrderID)">删除</x-button></span>
+                                                        @click.native="deleteOrder(item.oi_OrderID)">删除</x-button></span>
           </div>
         </li>
       </ul>
@@ -93,7 +92,6 @@
 <script>
   import {mapGetters} from 'vuex'
   import {XHeader, Actionsheet, XButton, Toast, Loading} from 'vux'
-
   export default {
     computed: mapGetters([
       'orderDataList'
@@ -151,7 +149,6 @@
           "isDelete": 0
         };
         return this.$store.dispatch('getOrderData', getUserOrderDetail)
-
       },
       //选择订单类型
       changeOrderType(menuKey, menuValue) {
@@ -192,7 +189,6 @@
             this.showLoding = false;
             done(true)
           })
-
       },
       //下拉加载
       infinite(done) {
@@ -202,7 +198,6 @@
             this.showLoding = false;
             done(true)
           })
-
       }
     },
   }

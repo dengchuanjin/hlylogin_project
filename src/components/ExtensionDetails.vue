@@ -1,8 +1,6 @@
 <template>
   <div>
     <x-header style="position: fixed;left: 0; top: 0; z-index: 999; width: 100%;">推广明细</x-header>
-
-
     <scroller
       :on-refresh="refresh"
       :on-infinite="infinite"
@@ -69,7 +67,6 @@
         </g>
       </svg>
     </scroller>
-
     <!--加载-->
     <loading :show="showLoding" text=""></loading>
   </div>

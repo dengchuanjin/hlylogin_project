@@ -3,7 +3,8 @@
     <x-header style="position: fixed;left: 0; top: 0; z-index: 999; width: 100%;">个人资料 <a slot="right" @click="update">编辑个人资料</a></x-header>
     <group style="text-align: left; padding:50px 0;">
       <div class="headImage clearfix">
-        <img :src="userInfromationObj.sm_ui_HeadImage" width="70" height="70">
+        <img width="70" height="70" v-lazy="userInfromationObj.sm_ui_HeadImage">
+        <!--userInfromationObj.sm_ui_HeadImage-->
         <strong @click="replaceHeadImage">更换头像&gt;</strong>
       </div>
       <cell title="昵称" :value="userInfromationObj.sm_ui_Name"></cell>
@@ -26,7 +27,7 @@
     >
       <input type="file" name="fileToUpload" id="fileToUpload" ref="upload"/>
 
-      <img :src="headImageUrl" alt="" width="70" height="70">
+      <img alt="" width="70" height="70" v-lazy="headImageUrl">
     </alert>
     <!--加载-->
     <loading :show="showLoding" style="position: relative; z-index: 9999" text=""></loading>
@@ -97,7 +98,7 @@
           var fd = new FormData();
           fd.append("fileToUpload", file);
           var xhr = new XMLHttpRequest();
-          xhr.open("POST", "http://hly.1000da.com.cn/OSSFile/PostToOSS");
+          xhr.open("POST", "http://192.168.3.50/OSSFile/PostToOSS");
           xhr.send(fd);
           xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && xhr.status == 200) {
@@ -113,17 +114,29 @@
       },
       //添加图片
       uploaNode() {
-        this.headImageUrl = '';
+       this.headImageUrl = '';
+
         setTimeout(() => {
+
           if (this.$refs.upload) {
+
+
+
             this.$refs.upload.addEventListener('change', data => {
+
               for (var i = 0; i < this.$refs.upload.files.length; i++) {
+
                 this.uploadToOSS(this.$refs.upload.files[i])
+
                   .then(data => {
+
+
                     if (data) {
+
                       this.headImageUrl = '';
                       this.headImageUrl = data.data;
                     } else {
+
                       this.$notify({
                         message: '图片地址不存在!',
                         type: 'error'
@@ -132,11 +145,17 @@
                   })
               }
             })
+
+
           };
         }, 30)
       },
 
       replaceImage() {
+
+        if( !this.headImageUrl ){
+          return
+        }
         this.userInfromationObj.sm_ui_HeadImage = this.headImageUrl;
         //修改提交
         let updateUser = {

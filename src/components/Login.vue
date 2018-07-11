@@ -15,7 +15,6 @@
 </template>
 <script>
   import {XButton, Toast} from 'vux'
-
   export default {
     components: {XButton, Toast},
     data() {
@@ -51,7 +50,6 @@
     }
   }
 </script>
-
 <style scoped>
   .wrap {
     position: absolute;
@@ -63,18 +61,15 @@
     -webkit-background-size: cover;
     background-size: cover;
   }
-
   h1 {
     font: bold 20px/2 "宋体";
     text-align: center;
     margin: 50px 0;
     color: #066CF9;
   }
-
   .loginInformation {
     text-align: center;
   }
-
   .loginInformation input {
     outline: none;
     border: 1px solid #ccc;
@@ -87,7 +82,6 @@
     border-radius: 14px;
     color: #000;
   }
-
   a {
     text-align: right;
     padding-right: 20px;

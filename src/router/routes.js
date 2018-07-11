@@ -12,7 +12,6 @@ import OrderDetails from '@/components/OrderDetails' //订单详情
 import ExtensionDetails from '@/components/ExtensionDetails' // 查询推广明细
 import UpdatePersonalData from '@/components/UpdatePersonalData' //修改个人资料
 import MoneyDetails from '@/components/MoneyDetails'//消费明细
-
 export default [
   {
     path:'/login',
@@ -84,6 +83,4 @@ export default [
     component: MoneyDetails,
     name:'MoneyDetails'
   },
-
-
 ]

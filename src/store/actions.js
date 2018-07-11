@@ -1,5 +1,5 @@
 import axios from 'axios';
-const newConnect = 'http://hly.1000da.com.cn' //http://hly.1000da.com.cn
+const newConnect = 'http://192.168.3.50' //http://hly.1000da.com.cn
 
 export default {
   //获取验证码

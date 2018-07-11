@@ -12,7 +12,11 @@ import VueScroller from 'vue-scroller'
 Vue.use(VueScroller)
 Vue.use(VueRouter)
 
-
+import VueLazyLoad from 'vue-lazyload'
+Vue.use(VueLazyLoad,{
+  error:'../static/img/error.jpg',
+  loading:'../static/img/loading.gif'
+});
 Vue.prototype.$http = axios;
 
 FastClick.attach(document.body)

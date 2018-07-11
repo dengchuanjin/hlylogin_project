@@ -23,9 +23,10 @@
 <script>
   import {mapGetters} from 'vuex'
   import {Toast, XHeader, Group, Cell, Divider, XInput, XButton, Alert, Loading} from 'vux'
-
   export default {
-    computed: mapGetters([]),
+    computed: mapGetters([
+
+    ]),
     components: {
       Toast,
       XHeader,
